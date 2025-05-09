@@ -16,4 +16,4 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
-    list_display = ('code', 'name')
+    list_display = ('code', 'mode', 'name')

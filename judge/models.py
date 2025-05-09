@@ -14,10 +14,10 @@ class Language(models.Model):
 class Problem(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(255)
-    content = models.TextField(default='')
+    content = models.TextField()
     input_format = models.TextField()
     output_format = models.TextField()
-    time_limit = models.FloatField(default=2.0)  # Giây
+    time_limit = models.FloatField(default=1.0)  # Giây
     memory_limit = models.IntegerField(default=256)  # MB
     languages = models.ManyToManyField(Language)
 
