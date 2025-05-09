@@ -43,7 +43,7 @@ ROOT_URLCONF = 'mini_oj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'judge/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
