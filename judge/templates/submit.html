@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ problem.title }}{% endblock %}
+{% block meta_description %}{{ problem.description }}{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/python/python.js"></script>
+{% endblock %}
+{% block content %}
+  <div class="container mt-4">
+    <h4 class="mb-3">
+      <i class="bi bi-pencil-square me-2 text-primary"></i>
+      Nộp bài: {{ problem.title }}
+    </h4>
+    <form method="post" action="{% url 'submit' problem.id %}">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="code" class="form-label"><i class="bi bi-file-earmark-code me-1"></i>Mã nguồn</label>
+        <div id="editor"></div>
+        <textarea name="code" id="code" hidden></textarea>
+      </div>
+
+      <div class="mb-3">
+        <select name="language" id="language" class="form-select" required>
+          {% for lang in problem.languages.all %}
+            <option value="{{ lang.id }}">{{ lang.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-box-arrow-up-right me-1"></i> Gửi bài chấm
+      </button>
+    </form>
+  </div>
+{% endblock %}
+{% block extra_script %}
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      lineNumbers: true,
+      mode: "python",  // cpp, java...
+      theme: "default"
+    });
+  </script>
+{% endblock %}

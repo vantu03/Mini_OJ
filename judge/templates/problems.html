@@ -1,21 +1,22 @@
-{% include "base/header.html" %}
-<div class="container mt-5">
-  <h2 class="mb-4 text-center">Danh sách bài tập</h2>
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Danh sách bài tập</h2>
 
-  {% if problems %}
-    <div class="list-group">
-      {% for problem in problems %}
-        <a href="{% url 'problem_detail' problem.id %}" class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ problem.title }}</h5>
-            <small>Giới hạn: {{ problem.time_limit }}s / {{ problem.memory_limit }}MB</small>
-          </div>
-          <p class="mb-1 text-muted">{{ problem.description|truncatewords:20 }}</p>
-        </a>
-      {% endfor %}
-    </div>
-  {% else %}
-    <div class="alert alert-info">Chưa có bài tập nào.</div>
-  {% endif %}
-</div>
-{% include "base/footer.html" %}
+    {% if problems %}
+      <div class="list-group">
+        {% for problem in problems %}
+          <a href="{% url 'problem' problem.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ problem.title }}</h5>
+              <small>Giới hạn: {{ problem.time_limit }}s / {{ problem.memory_limit }}MB</small>
+            </div>
+            <p class="mb-1 text-muted">{{ problem.description|truncatewords:20 }}</p>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info">Chưa có bài tập nào.</div>
+    {% endif %}
+  </div>
+{% endblock %}

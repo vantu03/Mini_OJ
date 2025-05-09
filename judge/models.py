@@ -4,17 +4,25 @@ from django.contrib.auth.models import User
 #Ngôn ngữ lập trình
 class Language(models.Model):
     code = models.CharField(max_length=10, unique=True)
+    mode = models.CharField(max_length=30)
     name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.name}"
 
 # Bài toán lập trình
 class Problem(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(255)
+    content = models.TextField(default='')
     input_format = models.TextField()
     output_format = models.TextField()
     time_limit = models.FloatField(default=2.0)  # Giây
     memory_limit = models.IntegerField(default=256)  # MB
     languages = models.ManyToManyField(Language)
+
+    def __str__(self):
+        return self.title
 
 # Test case chấm tự động
 class TestCase(models.Model):

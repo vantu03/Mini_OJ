@@ -1,8 +1,13 @@
+
+import markdown
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login as auth_login
 from django.contrib.auth.models import User
 from judge.func import is_valid_username, is_strong_password
-from judge.models import Problem
+from judge.models import Problem, TestCase, Language, Submission
+from django.utils.safestring import mark_safe
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 def index(request):
     return render(request, 'index.html')
@@ -13,9 +18,39 @@ def problems(request):
     })
 
 def problem(request, problem_id):
+    problem = Problem.objects.get(id=problem_id)
+    samples = TestCase.objects.filter(problem=problem, is_sample=True)
+    rendered_content = mark_safe(markdown.markdown(problem.content))
     return render(request, 'problem.html', {
-        'problem': Problem.objects.get(id=problem_id)
+        'problem': problem,
+        'samples': samples,
+        'rendered_content': rendered_content
     })
+
+@login_required
+def submit(request, problem_id):
+    print('tơi đây nè')
+    problem = Problem.objects.get(id=problem_id)
+
+    if request.method == "POST":
+        code = request.POST.get("code", "").strip()
+        language_id = request.POST.get("language")
+
+        if not code or not language_id:
+            # Có thể thêm messages để cảnh báo
+            return redirect("problem", problem_id=problem.id)
+
+        language = Language.objects.get(id=language_id)
+
+        Submission.objects.create(
+            user=request.user,
+            problem=problem,
+            code=code,
+            language=language,
+        )
+        return redirect("submission_list")
+
+    return render(request, "submit.html", {"problem": problem})
 
 def submission_list(request):
     return render(request, 'submissions.html')
