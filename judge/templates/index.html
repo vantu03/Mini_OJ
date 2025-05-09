@@ -3,22 +3,6 @@
 <div class="text-center">
   <h1 class="display-4 fw-bold mb-3"><i class="bi bi-terminal-dash"></i></h1>
   <p class="lead mb-4">Mini Online Judge - Chấm code tự động</p>
-
-  {% if user.is_authenticated %}
-    <a href="{% url 'problem_list' %}" class="btn btn-primary btn-lg me-2">
-      <i class="bi bi-journal-code me-1"></i> Bài tập
-    </a>
-    <a href="{% url 'submission_list' %}" class="btn btn-outline-secondary btn-lg">
-      <i class="bi bi-clock-history me-1"></i> Lịch sử
-    </a>
-  {% else %}
-    <a href="{% url 'login' %}" class="btn btn-success btn-lg me-2">
-      <i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập
-    </a>
-    <a href="{% url 'signup' %}" class="btn btn-outline-light btn-lg">
-      <i class="bi bi-pencil-square me-1"></i> Đăng ký
-    </a>
-  {% endif %}
 </div>
 
 {% include "base/footer.html" %}

@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Problem, TestCase, Submission
+from .models import Problem, TestCase, Submission, Language
 
-# Tùy chọn: hiện các trường chính ra luôn trong list view
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'time_limit', 'memory_limit')
@@ -14,3 +13,7 @@ class TestCaseAdmin(admin.ModelAdmin):
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'problem', 'language', 'verdict', 'submitted_at')
     list_filter = ('verdict', 'language', 'problem')
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ('code', 'name')
