@@ -1,13 +1,13 @@
 @echo off
-set /p MESSAGE=Nhập nội dung commit: 
+set /p MESSAGE=Enter content commit: 
 
-echo Đang thêm file...
+echo Adding files...
 git add .
 
-echo Tạo commit với nội dung: %MESSAGE%
+echo Create commit with content: %MESSAGE%
 git commit -m "%MESSAGE%"
 
-echo Push lên GitHub...
+echo Push to GitHub...
 git push origin main
 
 pause
