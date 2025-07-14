@@ -97,7 +97,7 @@ def judge_submission(submission_id):
                     )
                     if compile_result.returncode != 0:
                         submission.verdict = "COMPILE_ERROR"
-                        submission.error_message = compile_result.stderr.decode()
+                        submission.error_message = compile_result.stderr
                         submission.save()
                         return
                 except subprocess.TimeoutExpired:
@@ -124,7 +124,7 @@ def judge_submission(submission_id):
                     )
                     elapsed = time.time() - start
 
-                    output = result.stdout.decode().strip()
+                    output = result.stdout.strip()
                     expected = tc.expected_output.strip()
 
                     if output != expected:
