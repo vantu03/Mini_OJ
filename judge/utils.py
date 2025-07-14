@@ -54,7 +54,7 @@ def judge_submission(submission_id):
             },
             "c": {
                 "filename": "main.c",
-                "compile_cmd": ["gcc", "/app/main.c", "-o", "/app/main"],
+                "compile_cmd": ["gcc", "/app/main.c", "-o", "/app/main", "-lm"],
                 "run_cmd": ["/app/main"],
                 "docker_image": "oj-gcc"
             },
