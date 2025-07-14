@@ -15,13 +15,13 @@
     <li><strong>Thời gian nộp:</strong> {{ submission.submitted_at|date:"H:i d/m/Y" }}</li>
     <li><strong>Trạng thái:</strong>
       <span class="badge
-        {% if submission.verdict == 'ACCEPTED' %}bg-success
-        {% elif submission.verdict == 'WRONG_ANSWER' %}bg-danger
-        {% elif submission.verdict == 'COMPILE_ERROR' %}bg-warning text-dark
+        {% if submission.status == 'SUBMITTED' %}bg-success
+        {% elif submission.status == 'COMPILE_ERROR' %}bg-warning text-dark
+        {% elif submission.status == 'SYSTEM_ERROR' %}bg-dark text-light
         {% else %}bg-secondary
         {% endif %}
       ">
-        {{ submission.verdict }}
+        {{ submission.get_status_display }}
       </span>
     </li>
   </ul>

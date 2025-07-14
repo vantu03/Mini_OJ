@@ -17,21 +17,18 @@
 
               <!-- Badge trạng thái nằm bên trái -->
               <span class="badge px-3 py-2 rounded-pill fw-bold text-dark
-                {% if sub.verdict == 'ACCEPTED' %}bg-success bg-opacity-25
-                {% elif sub.verdict == 'WRONG_ANSWER' %}bg-danger bg-opacity-25
-                {% elif sub.verdict == 'TLE' %}bg-warning bg-opacity-25
-                {% elif sub.verdict == 'MLE' %}bg-warning bg-opacity-25
-                {% elif sub.verdict == 'RUNTIME_ERROR' %}bg-info bg-opacity-25
-                {% elif sub.verdict == 'COMPILE_ERROR' %}bg-secondary bg-opacity-25
-                {% elif sub.verdict == 'PENDING' %}bg-light text-muted
-                {% elif sub.verdict == 'SYSTEM_ERROR' %}bg-dark bg-opacity-25 text-light
+                {% if sub.status == 'SUBMITTED' %}bg-success bg-opacity-25
+                {% elif sub.status == 'COMPILE_ERROR' %}bg-secondary bg-opacity-25
+                {% elif sub.status == 'SYSTEM_ERROR' %}bg-dark bg-opacity-25 text-light
+                {% elif sub.status == 'PENDING' %}bg-light text-muted
                 {% else %}bg-light text-muted
                 {% endif %}
               ">
-                {{ sub.verdict|slice:":3" }}
-                  <br>
-                  {{ sub.language.name }}
+                {{ sub.status|slice:":3" }}
+                <br>
+                {{ sub.language.name }}
               </span>
+
 
               <!-- Thông tin bài nộp -->
               <div class="flex-grow-1">
