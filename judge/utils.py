@@ -26,14 +26,15 @@ def docker_run(image, command, mount_dir, input_data, timeout):
     return subprocess.run(
         ["docker", "run", "--rm",
          "-v", f"{mount_dir}:/app",
-         "--network=none",  # chặn truy cập mạng để an toàn
-         "--memory=256m",   # giới hạn RAM
-         "--cpus=0.5",      # giới hạn CPU
+         "--network=none",
+         "--memory=256m",
+         "--cpus=0.5",
          image] + command,
-        input=input_data.encode(),
+        input=input_data,  # ❗ không cần encode
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        timeout=timeout
+        timeout=timeout,
+        text=True  # ❗ tự xử lý chuỗi
     )
 
 
