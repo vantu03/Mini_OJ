@@ -3,12 +3,10 @@ import subprocess
 import tempfile
 import os
 import time
-from judge.models import Submission, TestCase
-
+from judge.models import Submission, TestCase, SubmissionResult
 
 def is_valid_username(username):
     return bool(re.fullmatch(r'[a-zA-Z0-9]{5,15}', username))
-
 
 def is_strong_password(password):
     if len(password) < 8 or len(password) > 32:
@@ -20,7 +18,6 @@ def is_strong_password(password):
     if not re.search(r'[\W_]', password):
         return False
     return True
-
 
 def docker_run(image, command, mount_dir, input_data, timeout, memory_limit="256m"):
     return subprocess.run(
@@ -37,7 +34,29 @@ def docker_run(image, command, mount_dir, input_data, timeout, memory_limit="256
         text=True
     )
 
-
+def parse_time_verbose_output(stderr_output: str) -> dict:
+    result = {}
+    patterns = {
+        'user_time': r'User time \(seconds\): ([\d.]+)',
+        'system_time': r'System time \(seconds\): ([\d.]+)',
+        'elapsed_time': r'Elapsed \(wall clock\) time.*: ([\d.:]+)',
+        'cpu_percent': r'Percent of CPU this job got: ([\d.]+)%',
+        'max_memory_kb': r'Maximum resident set size \(kbytes\): (\d+)',
+        'exit_status': r'Exit status: (\d+)',
+    }
+    for key, pattern in patterns.items():
+        match = re.search(pattern, stderr_output)
+        if match:
+            value = match.group(1)
+            if key in ['user_time', 'system_time', 'cpu_percent']:
+                result[key] = float(value)
+            elif key == 'max_memory_kb':
+                result[key] = int(value)
+            elif key == 'exit_status':
+                result[key] = int(value)
+            else:
+                result[key] = value
+    return result
 
 def judge_submission(submission_id):
     try:
@@ -74,8 +93,7 @@ def judge_submission(submission_id):
 
         lang = submission.language.code
         if lang not in language_settings:
-            submission.verdict = "COMPILE_ERROR"
-            submission.error_message = "Ngôn ngữ không hỗ trợ"
+            submission.status = "COMPILE_ERROR"
             submission.save()
             return
 
@@ -86,7 +104,7 @@ def judge_submission(submission_id):
             with open(code_path, "w") as f:
                 f.write(submission.code)
 
-            # Biên dịch nếu cần
+            # Compile if needed
             if config["compile_cmd"]:
                 try:
                     compile_result = docker_run(
@@ -97,22 +115,16 @@ def judge_submission(submission_id):
                         timeout=5
                     )
                     if compile_result.returncode != 0:
-                        submission.verdict = "COMPILE_ERROR"
-                        submission.error_message = compile_result.stderr
+                        submission.status = "COMPILE_ERROR"
                         submission.save()
                         return
-                except subprocess.TimeoutExpired:
-                    submission.verdict = "COMPILE_ERROR"
-                    submission.error_message = "Quá thời gian khi biên dịch"
-                    submission.save()
-                    return
-                except Exception as e:
-                    submission.verdict = "COMPILE_ERROR"
-                    submission.error_message = str(e)
+                except Exception:
+                    submission.status = "COMPILE_ERROR"
                     submission.save()
                     return
 
-            # Chạy từng test case
+            all_passed = True
+
             for tc in testcases:
                 try:
                     start = time.time()
@@ -122,39 +134,65 @@ def judge_submission(submission_id):
                         mount_dir=tmpdir,
                         input_data=tc.input_data,
                         timeout=problem.time_limit,
-                        memory_limit=f"{problem.memory_limit}m"  # ⚠️ thêm dòng này
+                        memory_limit=f"{problem.memory_limit}m"
                     )
                     elapsed = time.time() - start
+                    stats = parse_time_verbose_output(result.stderr)
 
+                    memory_used_mb = stats.get("max_memory_kb", 0) / 1024.0
                     output = result.stdout.strip()
                     expected = tc.expected_output.strip()
 
-                    if output != expected:
-                        submission.verdict = "WRONG_ANSWER"
-                        submission.error_message = f"Sai output ở test case\nExpected: {expected}\nGot: {output}"
-                        submission.save()
-                        return
+                    status = "ACCEPTED" if output == expected else "WRONG_ANSWER"
+                    if memory_used_mb > problem.memory_limit:
+                        status = "MLE"
+
+                    if status != "ACCEPTED":
+                        all_passed = False
+
+                    SubmissionResult.objects.create(
+                        submission=submission,
+                        test_case=tc,
+                        actual_output=output,
+                        expected_output=expected,
+                        execution_time=elapsed,
+                        memory_used=memory_used_mb,
+                        status=status,
+                        message=result.stderr
+                    )
 
                 except subprocess.TimeoutExpired:
-                    submission.verdict = "TLE"
-                    submission.error_message = f"Quá thời gian (>{problem.time_limit}s)"
-                    submission.save()
-                    return
+                    all_passed = False
+                    SubmissionResult.objects.create(
+                        submission=submission,
+                        test_case=tc,
+                        actual_output="",
+                        expected_output=tc.expected_output.strip(),
+                        execution_time=None,
+                        memory_used=None,
+                        status="TLE",
+                        message=f"Quá thời gian (> {problem.time_limit}s)"
+                    )
                 except Exception as e:
-                    submission.verdict = "RUNTIME_ERROR"
-                    submission.error_message = str(e)
-                    submission.save()
-                    return
+                    all_passed = False
+                    SubmissionResult.objects.create(
+                        submission=submission,
+                        test_case=tc,
+                        actual_output="",
+                        expected_output=tc.expected_output.strip(),
+                        execution_time=None,
+                        memory_used=None,
+                        status="RUNTIME_ERROR",
+                        message=str(e)
+                    )
 
-        submission.verdict = "ACCEPTED"
-        submission.error_message = ""
-        submission.save()
+            submission.status = "SUBMITTED" if all_passed else "SUBMITTED"
+            submission.save()
 
     except Exception as e:
         try:
             submission = Submission.objects.get(id=submission_id)
-            submission.verdict = "SYSTEM_ERROR"
-            submission.error_message = f"Lỗi hệ thống: {str(e)}"
+            submission.status = "SYSTEM_ERROR"
             submission.save()
         except:
             pass

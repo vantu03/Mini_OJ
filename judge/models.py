@@ -17,8 +17,8 @@ class Problem(models.Model):
     content = models.TextField()
     input_format = models.TextField()
     output_format = models.TextField()
-    time_limit = models.FloatField(default=1.0)  # Giây
-    memory_limit = models.IntegerField(default=256)  # MB
+    time_limit = models.FloatField(default=1.0, help_text="Second")
+    memory_limit = models.IntegerField(default=256, help_text="MB")
     languages = models.ManyToManyField(Language)
 
     def __str__(self):
@@ -32,18 +32,6 @@ class TestCase(models.Model):
     is_sample = models.BooleanField(default=False)
     score = models.FloatField(default=1.0)
 
-# Các trạng thái sau khi chấm bài
-VERDICT_CHOICES = [
-    ('PENDING', 'Pending'),
-    ('ACCEPTED', 'Accepted'),
-    ('WRONG_ANSWER', 'Wrong Answer'),
-    ('TLE', 'Time Limit Exceeded'),
-    ('MLE', 'Memory Limit Exceeded'),
-    ('RUNTIME_ERROR', 'Runtime Error'),
-    ('COMPILE_ERROR', 'Compilation Error'),
-    ('SYSTEM_ERROR', 'System Error'),
-]
-
 # Lần nộp bài
 class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -51,5 +39,34 @@ class Submission(models.Model):
     code = models.TextField()
     language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
-    verdict = models.CharField(max_length=20, choices=VERDICT_CHOICES, default='PENDING')
-    error_message = models.TextField(blank=True, null=True)
+    status = models.CharField(
+        max_length=20,
+        choices= [
+            ('PENDING', 'Pending'),
+            ('SUBMITTED', 'Submitted'),
+            ('COMPILE_ERROR', 'Compilation Error'),
+            ('SYSTEM_ERROR', 'System Error'),
+        ], default='PENDING')
+
+class SubmissionResult(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
+    actual_output = models.TextField(blank=True)
+    expected_output = models.TextField(blank=True)
+    execution_time = models.FloatField(null=True, blank=True, help_text="Second")
+    memory_used = models.FloatField(null=True, blank=True, help_text="MB")
+    message = models.TextField(blank=True, null=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('PENDING', 'Pending'),
+            ('ACCEPTED', 'Accepted'),
+            ('WRONG_ANSWER', 'Wrong Answer'),
+            ('TLE', 'Time Limit Exceeded'),
+            ('MLE', 'Memory Limit Exceeded'),
+            ('RUNTIME_ERROR', 'Runtime Error'),
+            ('COMPILE_ERROR', 'Compilation Error'),
+            ('SYSTEM_ERROR', 'System Error'),
+        ],
+        default='PENDING'
+    )
