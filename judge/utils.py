@@ -22,20 +22,21 @@ def is_strong_password(password):
     return True
 
 
-def docker_run(image, command, mount_dir, input_data, timeout):
+def docker_run(image, command, mount_dir, input_data, timeout, memory_limit="256m"):
     return subprocess.run(
-        ["docker", "run", "-i", "--rm",  # ⚠️ thêm -i để nhận input()
+        ["docker", "run", "-i", "--rm",
          "-v", f"{mount_dir}:/app",
          "--network=none",
-         "--memory=256m",
+         f"--memory={memory_limit}",
          "--cpus=0.5",
          image] + command,
         input=input_data,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         timeout=timeout,
-        text=True  # trả về str, không cần decode()
+        text=True
     )
+
 
 
 def judge_submission(submission_id):
@@ -120,7 +121,8 @@ def judge_submission(submission_id):
                         command=config["run_cmd"],
                         mount_dir=tmpdir,
                         input_data=tc.input_data,
-                        timeout=problem.time_limit
+                        timeout=problem.time_limit,
+                        memory_limit=f"{problem.memory_limit}m"  # ⚠️ thêm dòng này
                     )
                     elapsed = time.time() - start
 
