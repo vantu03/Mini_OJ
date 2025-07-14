@@ -84,19 +84,24 @@ def judge_submission(submission_id):
             with open(code_path, "w") as f:
                 f.write(submission.code)
 
-            # Biên dịch nếu có
+            # Biên dịch nếu cần
             if config["compile_cmd"]:
                 try:
-                    docker_run(
+                    compile_result = docker_run(
                         image=config["docker_image"],
                         command=config["compile_cmd"],
                         mount_dir=tmpdir,
                         input_data="",
                         timeout=5
                     )
-                except subprocess.CalledProcessError as e:
+                    if compile_result.returncode != 0:
+                        submission.verdict = "COMPILE_ERROR"
+                        submission.error_message = compile_result.stderr.decode()
+                        submission.save()
+                        return
+                except subprocess.TimeoutExpired:
                     submission.verdict = "COMPILE_ERROR"
-                    submission.error_message = e.stderr.decode()
+                    submission.error_message = "Quá thời gian khi biên dịch"
                     submission.save()
                     return
                 except Exception as e:
@@ -119,15 +124,17 @@ def judge_submission(submission_id):
                     elapsed = time.time() - start
 
                     output = result.stdout.decode().strip()
-                    if output != tc.expected_output.strip():
+                    expected = tc.expected_output.strip()
+
+                    if output != expected:
                         submission.verdict = "WRONG_ANSWER"
-                        submission.error_message = "Sai output ở test case"
+                        submission.error_message = f"Sai output ở test case\nExpected: {expected}\nGot: {output}"
                         submission.save()
                         return
 
                 except subprocess.TimeoutExpired:
                     submission.verdict = "TLE"
-                    submission.error_message = "Quá thời gian"
+                    submission.error_message = f"Quá thời gian (>{problem.time_limit}s)"
                     submission.save()
                     return
                 except Exception as e:
@@ -136,14 +143,16 @@ def judge_submission(submission_id):
                     submission.save()
                     return
 
+        # Nếu qua hết test case thì chấp nhận
         submission.verdict = "ACCEPTED"
+        submission.error_message = ""  # clear thông báo lỗi nếu có
         submission.save()
 
     except Exception as e:
         try:
             submission = Submission.objects.get(id=submission_id)
             submission.verdict = "SYSTEM_ERROR"
-            submission.error_message = str(e)
+            submission.error_message = f"Lỗi hệ thống: {str(e)}"
             submission.save()
         except:
             pass

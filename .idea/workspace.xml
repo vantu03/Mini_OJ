@@ -5,24 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c93f035-2cbe-4901-ab43-2f93304d2fac" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/judge/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/git_push.bat" beforeDir="false" afterPath="$PROJECT_DIR$/git_push.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/init db.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/func.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/site_base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/templates/problem.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/problem.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/templates/problems.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/problems.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/templates/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/signup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/templates/submit.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/submit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/judge/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/judge/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/judge/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mini_oj/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/mini_oj/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.bat" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
