@@ -48,6 +48,29 @@ class Submission(models.Model):
             ('SYSTEM_ERROR', 'System Error'),
         ], default='PENDING')
 
+    @property
+    def verdict(self):
+        if self.status in ['COMPILE_ERROR', 'SYSTEM_ERROR', 'PENDING']:
+            return self.status
+
+        if self.status == 'SUBMITTED':
+            results = self.submissionresult_set.all()
+
+            if not results.exists():
+                return 'PENDING'
+
+            for res in results:
+                if res.status in ['SYSTEM_ERROR', 'COMPILE_ERROR']:
+                    return res.status
+                if res.status in ['RUNTIME_ERROR', 'TLE', 'MLE', 'WRONG_ANSWER']:
+                    return res.status
+
+            if all(res.status == 'ACCEPTED' for res in results):
+                return 'ACCEPTED'
+
+        return 'PENDING'
+
+
 class SubmissionResult(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
