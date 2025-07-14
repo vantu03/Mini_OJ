@@ -3,7 +3,13 @@ from .models import Problem, TestCase, Submission, Language
 
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
+    class TestCaseInline(admin.StackedInline):
+        model = TestCase
+        extra = 1
+        show_change_link = True  # nếu muốn có link chỉnh sửa riêng
+
     list_display = ('id', 'title', 'time_limit', 'memory_limit')
+    inlines = [TestCaseInline]
 
 @admin.register(TestCase)
 class TestCaseAdmin(admin.ModelAdmin):
@@ -17,3 +23,5 @@ class SubmissionAdmin(admin.ModelAdmin):
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
     list_display = ('code', 'mode', 'name')
+
+
