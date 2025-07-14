@@ -25,49 +25,30 @@
       </span>
     </li>
   </ul>
-<!-- Kết quả các test case -->
-<h5 class="mt-4">Kết quả các test case</h5>
-<div class="table-responsive">
-  <table class="table table-bordered align-middle text-center">
-    <thead class="table-light">
-      <tr>
-        <th>#</th>
-        <th>Input</th>
-        <th>Output</th>
-        <th>Expected</th>
-        <th>Thời gian (s)</th>
-        <th>Bộ nhớ (MB)</th>
-        <th>Trạng thái</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for res in submission.submissionresult_set.all %}
-      <tr>
-        <td>{{ forloop.counter }}</td>
-        <td><pre class="m-0 small">{{ res.test_case.input_data }}</pre></td>
-        <td><pre class="m-0 small">{{ res.actual_output }}</pre></td>
-        <td><pre class="m-0 small">{{ res.expected_output }}</pre></td>
-        <td>{{ res.execution_time|floatformat:3 }}</td>
-        <td>{{ res.memory_used|floatformat:1 }}</td>
-        <td>
-          <span class="badge
-            {% if res.status == 'ACCEPTED' %}bg-success
-            {% elif res.status == 'WRONG_ANSWER' %}bg-danger
-            {% elif res.status == 'TLE' or res.status == 'MLE' %}bg-warning text-dark
-            {% elif res.status == 'RUNTIME_ERROR' %}bg-info
-            {% elif res.status == 'COMPILE_ERROR' %}bg-secondary
-            {% elif res.status == 'SYSTEM_ERROR' %}bg-dark text-light
-            {% else %}bg-light text-muted
-            {% endif %}
+  
+  <!-- Kết quả các test case --><h5 class="mt-4">Kết quả các test case</h5>
+  <ul class="list-group">
+    {% for res in submission.submissionresult_set.all %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>Test case {{ forloop.counter }}</div>
+        <span class="badge
+          {% if res.status == 'ACCEPTED' %}bg-success
+          {% elif res.status == 'WRONG_ANSWER' %}bg-danger
+          {% elif res.status == 'TLE' or res.status == 'MLE' %}bg-warning text-dark
+          {% elif res.status == 'RUNTIME_ERROR' %}bg-info
+          {% elif res.status == 'COMPILE_ERROR' %}bg-secondary
+          {% else %}bg-secondary
+          {% endif %}
           ">
-            {{ res.get_status_display }}
-          </span>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+          {{ res.get_status_display }}
+        </span>
+        <span class="text-muted small">
+          {{ res.execution_time|floatformat:3 }}s,
+          {{ res.memory_used|floatformat:1 }}MB
+        </span>
+      </li>
+    {% endfor %}
+  </ul>
 
   <!-- Mã nguồn -->
   <h5 class="mt-4">Mã nguồn</h5>
