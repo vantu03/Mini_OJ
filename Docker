@@ -1,0 +1,21 @@
+# Dockerfile
+FROM python:3.11-slim
+
+# Cài các công cụ biên dịch để chấm bài
+RUN apt update && apt install -y gcc g++ make openjdk-17-jdk curl && \
+    apt clean && rm -rf /var/lib/apt/lists/*
+
+# Thiết lập thư mục làm việc
+WORKDIR /app
+
+# Copy requirements
+COPY requirements.txt .
+
+# Cài thư viện Python
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy toàn bộ mã nguồn
+COPY . .
+
+# Chạy migrate và server khi container khởi động
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]

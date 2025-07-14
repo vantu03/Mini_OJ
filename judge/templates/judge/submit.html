@@ -1,0 +1,68 @@
+{% extends "judge/site_base.html" %}
+{% block title %}{{ problem.title }}{% endblock %}
+{% block meta_description %}{{ problem.description }}{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+
+  <!-- Các mode -->
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/clike/clike.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/python/python.js"></script>
+
+  <!-- Addons tự động đóng ngoặc -->
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/matchbrackets.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/closebrackets.js"></script>
+
+{% endblock %}
+{% block content %}
+  <div class="container mt-4">
+    <h4 class="mb-3">
+      <i class="bi bi-pencil-square me-2 text-primary"></i>
+      Nộp bài: {{ problem.title }}
+    </h4>
+    <form method="post" action="{% url 'submit' problem.id %}">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="code" class="form-label"><i class="bi bi-file-earmark-code me-1"></i>Mã nguồn</label>
+        <div id="editor"></div>
+        <textarea name="code" id="code" hidden></textarea>
+      </div>
+
+      <div class="mb-3">
+        <select name="language" id="language" class="form-select" required>
+          {% for lang in problem.languages.all %}
+            <option value="{{ lang.id }}" data-mode="{{ lang.mode }}">{{ lang.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-box-arrow-up-right me-1"></i> Gửi bài chấm
+      </button>
+    </form>
+  </div>
+{% endblock %}
+{% block extra_script %}
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      lineNumbers: true,
+      mode: "text/x-java", // hoặc python, cpp...
+      theme: "default",
+      matchBrackets: true,
+      autoCloseBrackets: true
+    });
+
+
+    const selectLang = document.getElementById("language");
+    function updateMode() {
+      const selectedOption = selectLang.options[selectLang.selectedIndex];
+      const mode = selectedOption.getAttribute("data-mode");
+      editor.setOption("mode", mode);
+    }
+
+    selectLang.addEventListener("change", updateMode);
+    updateMode();  // init mode on page load
+  </script>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "judge/site_base.html" %}
+{% block content %}
+  <div class="container mt-5" style="max-width: 500px;">
+    <h2 class="mb-4 text-center">Đăng ký tài khoản</h2>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.type }} alert-dismissible fade show" role="alert">
+          {{ message.text }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="username">Tên đăng nhập</label>
+        <input type="text" name="username" pattern="[a-zA-Z0-9]{5,15}" required class="form-control" placeholder="Tên tài khoản">
+      </div>
+      <div class="mb-3">
+        <label for="email">Email</label>
+        <input type="email" name="email" required class="form-control" placeholder="Email">
+      </div>
+      <div class="mb-3">
+        <label for="password1">Mật khẩu</label>
+        <input type="password" name="password1" minlength="8" maxlength="32" required class="form-control" placeholder="Mật khẩu">
+      </div>
+      <div class="mb-3">
+        <label for="password2">Xác nhận mật khẩu</label>
+        <input type="password" name="password2" minlength="8" maxlength="32" required class="form-control" placeholder="Nhập lại mật khẩu">
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+    </form>
+    <div class="text-center mt-3">
+      <a href="/login/">Đã có tài khoản? Đăng nhập</a>
+    </div>
+  </div>
+{% endblock %}

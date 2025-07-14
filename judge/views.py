@@ -3,17 +3,17 @@ import markdown
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login as auth_login
 from django.contrib.auth.models import User
-from judge.func import is_valid_username, is_strong_password
+from judge.utils import is_valid_username, is_strong_password
 from judge.models import Problem, TestCase, Language, Submission
 from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
+from judge.utils import judge_submission
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'judge/index.html')
 
 def problems(request):
-    return render(request, 'problems.html', {
+    return render(request, 'judge/problems.html', {
         'problems': Problem.objects.all().order_by('id')
     })
 
@@ -21,7 +21,7 @@ def problem(request, problem_id):
     problem = Problem.objects.get(id=problem_id)
     samples = TestCase.objects.filter(problem=problem, is_sample=True)
     rendered_content = mark_safe(markdown.markdown(problem.content))
-    return render(request, 'problem.html', {
+    return render(request, 'judge/problem.html', {
         'problem': problem,
         'samples': samples,
         'rendered_content': rendered_content
@@ -29,7 +29,6 @@ def problem(request, problem_id):
 
 @login_required
 def submit(request, problem_id):
-    print('tơi đây nè')
     problem = Problem.objects.get(id=problem_id)
 
     if request.method == "POST":
@@ -42,18 +41,28 @@ def submit(request, problem_id):
 
         language = Language.objects.get(id=language_id)
 
-        Submission.objects.create(
+        submission = Submission.objects.create(
             user=request.user,
             problem=problem,
             code=code,
             language=language,
         )
-        return redirect("submission_list")
+        judge_submission(submission.id)
+        return redirect("submissions")
 
-    return render(request, "submit.html", {"problem": problem})
+    return render(request, "judge/submit.html", {"problem": problem})
 
-def submission_list(request):
-    return render(request, 'submissions.html')
+def submissions(request):
+    submissions = Submission.objects.filter(user=request.user).order_by('-submitted_at')
+    return render(request, 'judge/submissions.html', {'submissions': submissions})
+
+def submission(request, submission_id):
+    submission = Submission.objects.get(id=submission_id)
+
+    # Chỉ cho người nộp hoặc admin xem
+    if request.user != submission.user and not request.user.is_superuser:
+        pass
+    return render(request, 'judge/submission.html', {'submission': submission})
 
 def signup(request):
     messages = []
@@ -94,7 +103,7 @@ def login(request):
         else:
             messages.append({"type": "danger", "text": "Tên đăng nhập hoặc mật khẩu không đúng."})
 
-    return render(request, 'login.html', {'messages': messages})
+    return render(request, 'judge/login.html', {'messages': messages})
 
 def custom_logout(request):
     logout(request)

@@ -1,13 +1,19 @@
 @echo off
-set /p MESSAGE=Enter content commit: 
+cd /d "%~dp0"
 
-echo Adding files...
+echo Activating virtual environment...
+call venv\Scripts\activate.bat
+
+echo Collectstatic...
+python manage.py collectstatic --noinput
+
+echo Adding all changes...
 git add .
 
-echo Create commit with content: %MESSAGE%
-git commit -m "%MESSAGE%"
+echo Enter commit message:
+set /p msg="> "
 
-echo Push to GitHub...
-git push origin main
+git commit -m "%msg%"
+git push -f origin main
 
 pause

@@ -1,0 +1,77 @@
+{% extends "judge/site_base.html" %}
+{% block title %}{{ problem.title }}{% endblock %}
+{% block meta_description %}{{ problem.description }}{% endblock %}
+{% block content %}
+  <div class="container mt-4">
+    <div class="d-flex align-items-center mb-0">
+      <i class="bi bi-journal-code fs-4 me-2 text-primary"></i>
+      <h3 class="mb-0">{{ problem.title }}</h3>
+    </div>
+    <hr>
+    <div class="row">
+      <!-- LEFT: Mô tả, input/output -->
+      <div class="col-lg-9 col-md-8 col-12">
+        <div class="mb-4">
+          <p>{{ rendered_content }}</p>
+        </div>
+
+        {% if problem.input_format %}
+          <div class="mb-4">
+            <h6><i class="bi bi-box-arrow-in-down-right me-1"></i> Định dạng đầu vào</h6>
+            <pre class="bg-light p-3 rounded border">{{ problem.input_format }}</pre>
+          </div>
+        {% endif %}
+
+        {% if problem.output_format %}
+          <div class="mb-4">
+            <h6><i class="bi bi-box-arrow-up-right me-1"></i> Định dạng đầu ra</h6>
+            <pre class="bg-light p-3 rounded border">{{ problem.output_format }}</pre>
+          </div>
+        {% endif %}
+
+        {% if samples %}
+          <div class="mb-4">
+            <h6><i class="bi bi-terminal me-1"></i> Ví dụ</h6>
+            {% for sample in samples %}
+              <div class="border rounded p-3 mb-3 bg-white">
+                <div class="mb-2"><strong>Input:</strong></div>
+                <pre class="bg-light p-2 rounded border">{{ sample.input_data }}</pre>
+                <div class="mb-2 mt-2"><strong>Output:</strong></div>
+                <pre class="bg-light p-2 rounded border">{{ sample.expected_output }}</pre>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+      </div>
+
+      <!-- RIGHT: Thông số + Nộp -->
+      <div class="col-lg-3 col-md-4 col-12">
+        <div class="bg-light border rounded p-3 mb-3 text-start">
+          <div class="mb-2 text-muted">
+            <i class="bi bi-stopwatch me-1"></i> <strong>{{ problem.time_limit }} second</strong>
+          </div>
+          <div class="mb-3 text-muted">
+            <i class="bi bi-memory me-1"></i> <strong>{{ problem.memory_limit }} MB</strong>
+          </div>
+
+          {% if problem.languages.exists %}
+            <div class="mb-3">
+              <h6 class="text-muted"><i class="bi bi-code-slash me-1"></i> Languages</h6>
+              <ul class="list-unstyled mb-0">
+                {% for lang in problem.languages.all %}
+                  <li><i class="bi bi-chevron-right small text-secondary me-1"></i> {{ lang.name }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <hr>
+          <a href="{% url 'submit' problem.id %}" class="btn btn-primary w-100">
+            <i class="bi bi-pencil-square me-1"></i> Submit
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

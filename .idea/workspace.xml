@@ -5,7 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c93f035-2cbe-4901-ab43-2f93304d2fac" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/judge/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/git_push.bat" beforeDir="false" afterPath="$PROJECT_DIR$/git_push.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/init db.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/func.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/site_base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/templates/problem.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/problem.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/templates/problems.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/problems.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/templates/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/signup.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/templates/submit.html" beforeDir="false" afterPath="$PROJECT_DIR$/judge/templates/judge/submit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/judge/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/judge/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/judge/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mini_oj/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/mini_oj/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.bat" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,25 +40,39 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;vantu03&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/vantu03/Mini_OJ.git&quot;,
+    &quot;accountId&quot;: &quot;f8899c90-47ff-448b-bee8-9bf8d2387a99&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2wrkuGsT3U0KhCQXtu7WQIs08RM" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Admin/Desktop/Django/mini_oj"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Desktop/Django/DLHub&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Admin\Desktop\Django\mini_oj\judge\templates\judge" />
       <recent name="C:\Users\Admin\Desktop\Django\mini_oj\judge\templates" />
       <recent name="C:\Users\Admin\Desktop\Django\mini_oj\judge" />
     </key>
