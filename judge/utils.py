@@ -24,17 +24,17 @@ def is_strong_password(password):
 
 def docker_run(image, command, mount_dir, input_data, timeout):
     return subprocess.run(
-        ["docker", "run", "--rm",
+        ["docker", "run", "-i", "--rm",  # ⚠️ thêm -i để nhận input()
          "-v", f"{mount_dir}:/app",
          "--network=none",
          "--memory=256m",
          "--cpus=0.5",
          image] + command,
-        input=input_data,  # ❗ không cần encode
+        input=input_data,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         timeout=timeout,
-        text=True  # ❗ tự xử lý chuỗi
+        text=True  # trả về str, không cần decode()
     )
 
 
@@ -144,9 +144,8 @@ def judge_submission(submission_id):
                     submission.save()
                     return
 
-        # Nếu qua hết test case thì chấp nhận
         submission.verdict = "ACCEPTED"
-        submission.error_message = ""  # clear thông báo lỗi nếu có
+        submission.error_message = ""
         submission.save()
 
     except Exception as e:
