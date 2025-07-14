@@ -34,8 +34,6 @@
       <li class="list-group-item d-flex justify-content-between align-items-center">
         <div>
           <i class="bi bi-hash"></i> Test {{ forloop.counter }}
-        </div>
-        <div class="d-flex align-items-center gap-3">
           <span class="badge
             {% if res.status == 'ACCEPTED' %}bg-success
             {% elif res.status == 'WRONG_ANSWER' %}bg-danger
@@ -46,6 +44,8 @@
             {% endif %}">
             {{ res.get_status_display }}
           </span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
           <small class="text-muted">
             <i class="bi bi-stopwatch me-1"></i>{{ res.execution_time|floatformat:3 }}s
             <i class="bi bi-memory ms-2 me-1"></i>{{ res.memory_used|floatformat:1 }}MB
